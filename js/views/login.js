@@ -2,11 +2,14 @@
    ViveShop — Login ভিউ (আগের login.html + js/login.js)
    ========================================================= */
 const LoginView = {
-  mount(container) {
+  mount(container, query) {
+    const redirect = query?.get("redirect") || "";
+    const signupHref = redirect ? `#/signup?redirect=${encodeURIComponent(redirect)}` : "#/signup";
+
     container.innerHTML = `
   <div class="auth-wrap">
     <div class="auth-card">
-      <h1 class="bn">আবার স্বাগতম 👋</h1>
+      <h1 class="bn">আবার স্বাগতম <i class="fa-solid fa-hand"></i></h1>
       <p class="sub bn">তোমার অ্যাকাউন্টে লগইন করো</p>
 
       <div class="form-msg" id="login-msg"></div>
@@ -24,7 +27,7 @@ const LoginView = {
         <button type="submit" class="btn btn-primary btn-block btn-lg bn" id="login-btn">লগইন করো</button>
       </form>
 
-      <p class="auth-alt bn">অ্যাকাউন্ট নেই? <a href="#/signup">সাইন আপ করো</a></p>
+      <p class="auth-alt bn">অ্যাকাউন্ট নেই? <a href="${signupHref}">সাইন আপ করো</a></p>
     </div>
   </div>`;
 
@@ -41,7 +44,7 @@ const LoginView = {
         await auth.signInWithEmailAndPassword(email, password);
         msg.textContent = "লগইন সফল হয়েছে! নিয়ে যাওয়া হচ্ছে...";
         msg.classList.add("success", "show");
-        setTimeout(() => { location.hash = "#/account"; }, 800);
+        setTimeout(() => { location.hash = redirect || "#/account"; }, 800);
       } catch (err) {
         msg.textContent = translateAuthError(err.code);
         msg.classList.add("error", "show");
