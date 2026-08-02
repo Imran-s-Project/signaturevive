@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ViveShop — তোমার প্রয়োজনের সব কিছু, এক জায়গায়</title>
+<meta name="description" content="ViveShop — বাংলাদেশের বিশ্বস্ত অনলাইন শপ। ফ্যাশন, ইলেকট্রনিক্স, হোম ও বিউটি প্রোডাক্ট, ক্যাশ অন ডেলিভারি ও বিকাশ/নগদ/রকেট পেমেন্ট সুবিধা সহ।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="layout-header"></div>
+
+<main id="app"></main>
+
+<div id="layout-footer"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<!-- ভিত্তি: config, ডেটা, শেয়ার্ড রেন্ডারার -->
+<script src="js/firebase-config.js"></script>
+<script src="js/products-data.js"></script>
+<script src="js/render.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+
+<!-- প্রতিটি "পেজ" এখন শুধু একটি JS ভিউ মডিউল -->
+<script src="js/views/home.js"></script>
+<script src="js/views/shop.js"></script>
+<script src="js/views/product.js"></script>
+<script src="js/views/login.js"></script>
+<script src="js/views/signup.js"></script>
+<script src="js/views/forgot-password.js"></script>
+<script src="js/views/checkout.js"></script>
+<script src="js/views/account.js"></script>
+
+<!-- রাউটার সবশেষে — কারণ এটি উপরের সব ভিউ ও লেআউট ব্যবহার করে -->
+<script src="js/router.js"></script>
+</body>
+</html>
