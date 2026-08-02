@@ -13,7 +13,7 @@ function renderProductCard(p) {
       ${p.tag ? `<span class="product-tag ${p.tag === "NEW" ? "new" : ""}">${p.tag === "SALE" ? `-${discount}%` : "নতুন"}</span>` : ""}
       <img src="${p.images[0]}" alt="${p.name}" loading="lazy">
     </a>
-    <button class="wishlist-btn" aria-label="Wishlist" onclick="showToast('উইশলিস্টে যোগ হয়েছে ❤️')">
+    <button class="wishlist-btn${typeof Wishlist !== "undefined" && Wishlist.has(p.id) ? " active" : ""}" data-pid="${p.id}" aria-label="Wishlist" onclick="toggleWishlistBtn('${p.id}', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
     </button>
     <button class="quick-add" onclick="quickAdd('${p.id}')">কার্টে যোগ করো</button>
