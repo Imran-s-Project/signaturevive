@@ -14,7 +14,7 @@ const HomeView = {
   <section class="hero">
     <div class="hero-inner">
       <div>
-        <span class="hero-eyebrow">✨ নতুন কালেকশন এসেছে</span>
+        <span class="hero-eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> নতুন কালেকশন এসেছে</span>
         <h1 class="bn">তোমার প্রয়োজনের <em>সবকিছু</em>,<br>এক জায়গায় পাও</h1>
         <p class="bn">ফ্যাশন থেকে ইলেকট্রনিক্স, হোম ডেকর থেকে বিউটি প্রোডাক্ট — যাচাই করা মানের পণ্য, সহজ পেমেন্ট আর দ্রুত ডেলিভারিতে, সরাসরি তোমার দরজায়।</p>
         <div class="hero-actions">
@@ -95,7 +95,7 @@ const HomeView = {
     if (catGrid) {
       catGrid.innerHTML = CATEGORIES.map(c => `
       <a href="#/shop?cat=${encodeURIComponent(c.name)}" class="cat-card">
-        <span class="emoji">${c.emoji}</span>
+        <i class="fa-solid ${c.icon} cat-icon"></i>
         <span class="bn">${HOME_CAT_BN_NAMES[c.name] || c.name}</span>
       </a>`).join("");
     }
@@ -103,10 +103,28 @@ const HomeView = {
     renderProductGrid(document.getElementById("featured-grid"), PRODUCTS.filter(p => p.tag === "SALE").slice(0, 4));
     renderProductGrid(document.getElementById("new-grid"), PRODUCTS.filter(p => p.tag === "NEW").slice(0, 4));
 
-    document.getElementById("newsletter-form")?.addEventListener("submit", e => {
+    document.getElementById("newsletter-form")?.addEventListener("submit", async e => {
       e.preventDefault();
-      showToast("সাবস্ক্রাইব করার জন্য ধন্যবাদ! 🎉");
-      e.target.reset();
+      const form = e.target;
+      const emailInput = form.querySelector('input[type="email"]');
+      const email = emailInput.value.trim();
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalLabel = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="loader-spin"></span>`;
+      try {
+        await db.collection("newsletter_subscribers").doc(email).set({
+          email,
+          subscribedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+        showToast(`সাবস্ক্রাইব করার জন্য ধন্যবাদ! <i class="fa-solid fa-champagne-glasses"></i>`);
+        form.reset();
+      } catch (err) {
+        showToast("দুঃখিত, সাবস্ক্রাইব করতে সমস্যা হয়েছে। আবার চেষ্টা করো।");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
     });
   }
 };
