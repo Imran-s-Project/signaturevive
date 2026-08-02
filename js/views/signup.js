@@ -2,11 +2,14 @@
    ViveShop — Signup ভিউ (আগের signup.html + js/signup.js)
    ========================================================= */
 const SignupView = {
-  mount(container) {
+  mount(container, query) {
+    const redirect = query?.get("redirect") || "";
+    const loginHref = redirect ? `#/login?redirect=${encodeURIComponent(redirect)}` : "#/login";
+
     container.innerHTML = `
   <div class="auth-wrap">
     <div class="auth-card">
-      <h1 class="bn">অ্যাকাউন্ট তৈরি করো ✨</h1>
+      <h1 class="bn">অ্যাকাউন্ট তৈরি করো <i class="fa-solid fa-wand-magic-sparkles"></i></h1>
       <p class="sub bn">ViveShop-এ প্রথম অর্ডার করতে সাইন আপ করো</p>
 
       <div class="form-msg" id="signup-msg"></div>
@@ -33,7 +36,7 @@ const SignupView = {
         <button type="submit" class="btn btn-primary btn-block btn-lg bn" id="signup-btn">সাইন আপ করো</button>
       </form>
 
-      <p class="auth-alt bn">আগে থেকেই অ্যাকাউন্ট আছে? <a href="#/login">লগইন করো</a></p>
+      <p class="auth-alt bn">আগে থেকেই অ্যাকাউন্ট আছে? <a href="${loginHref}">লগইন করো</a></p>
     </div>
   </div>`;
 
@@ -74,7 +77,7 @@ const SignupView = {
         });
         msg.textContent = "অ্যাকাউন্ট তৈরি হয়েছে! নিয়ে যাওয়া হচ্ছে...";
         msg.classList.add("success", "show");
-        setTimeout(() => { location.hash = "#/account"; }, 800);
+        setTimeout(() => { location.hash = redirect || "#/account"; }, 800);
       } catch (err) {
         msg.textContent = translateAuthError(err.code);
         msg.classList.add("error", "show");
