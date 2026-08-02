@@ -94,7 +94,7 @@ const CheckoutView = {
       <div style="width:72px;height:72px;border-radius:50%;background:#E9F8EF;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
         <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#1F9D55" stroke-width="2.5" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
       </div>
-      <h2 class="bn">তোমার অর্ডার সফলভাবে সম্পন্ন হয়েছে! 🎉</h2>
+      <h2 class="bn">তোমার অর্ডার সফলভাবে সম্পন্ন হয়েছে! <i class="fa-solid fa-champagne-glasses"></i></h2>
       <p class="bn" style="color:var(--color-muted);max-width:420px;margin:8px auto 24px">অর্ডার আইডি: <strong id="success-order-id"></strong><br>আমরা শীঘ্রই তোমার সাথে যোগাযোগ করবো।</p>
       <a href="#/shop" class="btn btn-primary bn">কেনাকাটা চালিয়ে যাও</a>
     </div>
