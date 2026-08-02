@@ -17,6 +17,8 @@ const CheckoutView = {
       <a href="#/shop" class="btn btn-primary bn" style="margin-top:14px">কেনাকাটা শুরু করো</a>
     </div>
 
+    <div id="checkout-guest-note" class="form-msg bn" style="display:none;background:#FFF6F3;color:var(--color-primary)"></div>
+
     <form id="checkout-layout" class="checkout-layout">
       <div style="display:flex;flex-direction:column;gap:20px">
         <div class="checkout-card">
@@ -108,7 +110,19 @@ const CheckoutView = {
     }
     renderOrderSummary();
     setupPaymentToggle();
+    setupGuestNote();
     document.getElementById("checkout-layout").addEventListener("submit", handleSubmit);
+
+    function setupGuestNote() {
+      const note = document.getElementById("checkout-guest-note");
+      const unsub = auth.onAuthStateChanged(user => {
+        unsub();
+        if (user) return;
+        note.innerHTML = `অর্ডার হিস্টোরি নিজের অ্যাকাউন্টে জমা রাখতে <a href="#/login?redirect=${encodeURIComponent("#/checkout")}" style="color:var(--color-accent);font-weight:600">লগইন করো</a>, অথবা গেস্ট হিসেবে চালিয়ে যাও।`;
+        note.classList.add("show");
+        note.style.display = "block";
+      });
+    }
 
     function renderOrderSummary() {
       const items = Cart.get();
