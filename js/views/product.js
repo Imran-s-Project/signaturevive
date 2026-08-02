@@ -3,6 +3,19 @@
    ========================================================= */
 const PRODUCT_OPTION_BN_LABELS = { color: "রঙ", size: "সাইজ" };
 
+function starRow(rating) {
+  const rounded = Math.round(rating);
+  return Array.from({ length: 5 }).map((_, i) =>
+    `<span style="opacity:${i < rounded ? 1 : .25}">${starSvg()}</span>`
+  ).join("");
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str ?? "";
+  return div.innerHTML;
+}
+
 const ProductView = {
   mount(container, query) {
     let currentImageIndex = 0;
@@ -37,6 +50,7 @@ const ProductView = {
     setupQty();
     setupTabs();
     setupActions(product);
+    setupReviews(product);
 
     const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
     if (related.length) {
@@ -65,7 +79,7 @@ const ProductView = {
         <div class="pd-zoom-wrap" id="pd-zoom-wrap">
           <img id="pd-main-img" src="${p.images[0]}" alt="${p.name}">
           <div class="pd-lens" id="pd-lens"></div>
-          <span class="pd-zoom-hint bn">🔍 হোভার করে জুম দেখো</span>
+          <span class="pd-zoom-hint bn"><i class="fa-solid fa-magnifying-glass"></i> হোভার করে জুম দেখো</span>
         </div>
         <div class="pd-thumbs" id="pd-thumbs">
           ${p.images.map((img, i) => `<div class="pd-thumb ${i === 0 ? "active" : ""}" data-index="${i}"><img src="${img}" alt="thumb ${i + 1}"></div>`).join("")}
@@ -112,7 +126,7 @@ const ProductView = {
     <div class="tab-bar">
       <button class="tab-btn active bn" data-tab="desc">বিবরণ</button>
       <button class="tab-btn bn" data-tab="spec">স্পেসিফিকেশন</button>
-      <button class="tab-btn bn" data-tab="reviews">রিভিউ (${p.reviews})</button>
+      <button class="tab-btn bn" data-tab="reviews">রিভিউ</button>
     </div>
     <div class="tab-panel active bn" id="tab-desc"><p>${p.description}</p></div>
     <div class="tab-panel bn" id="tab-spec">
@@ -121,7 +135,16 @@ const ProductView = {
       </table>
     </div>
     <div class="tab-panel bn" id="tab-reviews">
-      <p>গড় রেটিং ${p.rating}/৫ — ${p.reviews} জন ক্রেতার রিভিউ অনুযায়ী। প্রোডাক্ট হাতে পাওয়ার পর তুমিও রিভিউ দিতে পারবে।</p>
+      <div class="reviews-overview">
+        <span class="reviews-score-num">${p.rating}</span>
+        <span class="stars-row">${starRow(p.rating)}</span>
+        <span class="reviews-score-count bn">(${p.reviews} জন ক্রেতার রেটিং)</span>
+      </div>
+
+      <div id="review-form-slot"><div class="empty-state bn" style="padding:20px 0">লোড হচ্ছে...</div></div>
+
+      <h4 class="bn" style="margin:30px 0 14px">ক্রেতাদের রিভিউ</h4>
+      <div id="reviews-list"><div class="empty-state bn" style="padding:20px 0">রিভিউ লোড হচ্ছে...</div></div>
     </div>
 
     <section class="section" id="related-section" style="padding-left:0;padding-right:0">
@@ -223,6 +246,134 @@ const ProductView = {
         Cart.add(product.id, currentQty, { ...selectedOptions });
         location.hash = "#/checkout";
       });
+    }
+
+    /* ---------- রিভিউ সিস্টেম (Firestore-এর মাধ্যমে সংরক্ষিত, লগইন আবশ্যক) ---------- */
+    function setupReviews(product) {
+      const listEl = document.getElementById("reviews-list");
+      const formSlot = document.getElementById("review-form-slot");
+
+      loadReviewsList();
+
+      const unsub = auth.onAuthStateChanged(user => {
+        unsub();
+        renderReviewForm(user);
+      });
+
+      async function loadReviewsList() {
+        try {
+          const snap = await db.collection("reviews").where("productId", "==", product.id).get();
+          const docs = snap.docs.map(d => d.data()).sort((a, b) => {
+            const ta = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+            const tb = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+            return tb - ta;
+          });
+          if (docs.length === 0) {
+            listEl.innerHTML = `<div class="empty-state bn" style="padding:24px 0">এখনো কোনো রিভিউ নেই। প্রোডাক্ট হাতে পাওয়ার পর প্রথম রিভিউ তুমিই দাও!</div>`;
+            return;
+          }
+          listEl.innerHTML = docs.map(r => `
+        <div class="review-item">
+          <div class="review-item-head">
+            <strong class="bn">${escapeHtml(r.userName || "ক্রেতা")}</strong>
+            <span class="stars-row small">${starRow(r.rating || 0)}</span>
+          </div>
+          <p class="bn review-item-text">${escapeHtml(r.comment)}</p>
+        </div>`).join("");
+        } catch (err) {
+          listEl.innerHTML = `<div class="empty-state bn" style="padding:24px 0">রিভিউ লোড করতে সমস্যা হয়েছে।</div>`;
+        }
+      }
+
+      async function renderReviewForm(user) {
+        if (!user) {
+          const redirectTarget = encodeURIComponent(`#/product?id=${product.id}`);
+          formSlot.innerHTML = `
+        <div class="review-login-cta bn">
+          <p>এই প্রোডাক্টের জন্য রিভিউ দিতে হলে আগে লগইন করতে হবে।</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a href="#/login?redirect=${redirectTarget}" class="btn btn-primary bn">লগইন করো</a>
+            <a href="#/signup?redirect=${redirectTarget}" class="btn btn-outline bn">অ্যাকাউন্ট তৈরি করো</a>
+          </div>
+        </div>`;
+          return;
+        }
+
+        let existing = null;
+        try {
+          const doc = await db.collection("reviews").doc(`${product.id}_${user.uid}`).get();
+          if (doc.exists) existing = doc.data();
+        } catch (err) { /* নতুন ফর্ম দেখাও */ }
+
+        let selectedRating = existing?.rating || 5;
+
+        formSlot.innerHTML = `
+        <div class="review-form">
+          <h4 class="bn">${existing ? "তোমার রিভিউ" : "রিভিউ লিখো"}</h4>
+          <div class="star-input" id="review-star-input">
+            ${[1, 2, 3, 4, 5].map(n => `<button type="button" class="star-btn ${n <= selectedRating ? "active" : ""}" data-value="${n}" aria-label="${n} স্টার">${starSvg()}</button>`).join("")}
+          </div>
+          <textarea id="review-comment" class="bn" rows="3" placeholder="প্রোডাক্টটি নিয়ে তোমার অভিজ্ঞতা লিখো..." required>${existing ? escapeHtml(existing.comment) : ""}</textarea>
+          <div class="form-msg" id="review-msg"></div>
+          <button class="btn btn-primary bn" id="review-submit-btn">${existing ? "রিভিউ আপডেট করো" : "রিভিউ জমা দাও"}</button>
+        </div>`;
+
+        document.querySelectorAll("#review-star-input .star-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            selectedRating = Number(btn.dataset.value);
+            document.querySelectorAll("#review-star-input .star-btn").forEach(b => {
+              b.classList.toggle("active", Number(b.dataset.value) <= selectedRating);
+            });
+          });
+        });
+
+        document.getElementById("review-submit-btn").addEventListener("click", async () => {
+          const msg = document.getElementById("review-msg");
+          const btn = document.getElementById("review-submit-btn");
+          const comment = document.getElementById("review-comment").value.trim();
+          msg.className = "form-msg";
+          if (!comment) {
+            msg.textContent = "অনুগ্রহ করে তোমার মতামত লিখো।";
+            msg.classList.add("error", "show");
+            return;
+          }
+          const originalLabel = btn.textContent;
+          btn.disabled = true;
+          btn.innerHTML = `<span class="loader-spin"></span>`;
+          try {
+            const ref = db.collection("reviews").doc(`${product.id}_${user.uid}`);
+            const userName = user.displayName || user.email.split("@")[0];
+            if (existing) {
+              await ref.update({
+                rating: selectedRating,
+                comment,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+            } else {
+              await ref.set({
+                productId: product.id,
+                uid: user.uid,
+                userName,
+                rating: selectedRating,
+                comment,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+              existing = { rating: selectedRating, comment };
+            }
+            msg.textContent = "ধন্যবাদ! তোমার রিভিউ সংরক্ষণ করা হয়েছে।";
+            msg.classList.add("success", "show");
+            btn.disabled = false;
+            btn.textContent = "রিভিউ আপডেট করো";
+            loadReviewsList();
+          } catch (err) {
+            msg.textContent = "দুঃখিত, রিভিউ সংরক্ষণ করতে সমস্যা হয়েছে। আবার চেষ্টা করো।";
+            msg.classList.add("error", "show");
+            btn.disabled = false;
+            btn.textContent = originalLabel;
+          }
+        });
+      }
     }
   }
 };
