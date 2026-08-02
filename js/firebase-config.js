@@ -17,6 +17,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 /* =========================================================
    Firestore নিরাপত্তা নিয়ম (Console → Firestore → Rules এ বসাও):
