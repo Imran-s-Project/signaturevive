@@ -55,13 +55,20 @@ const AccountView = {
       });
 
       try {
-        const snap = await db.collection("orders").where("uid", "==", user.uid).orderBy("createdAt", "desc").get();
+        // uid দিয়ে ফিল্টার করে সব অর্ডার আনা হচ্ছে, তারপর ক্লায়েন্ট সাইডে সময় অনুযায়ী সাজানো হচ্ছে —
+        // এভাবে করলে Firestore-এ আলাদা কম্পোজিট ইনডেক্স তৈরি করার দরকার হয় না
+        const snap = await db.collection("orders").where("uid", "==", user.uid).get();
         const list = document.getElementById("orders-list");
         if (snap.empty) {
           list.innerHTML = `<div class="empty-state bn">এখনো কোনো অর্ডার নেই। <a href="#/shop" style="color:var(--color-accent);font-weight:600">কেনাকাটা শুরু করো</a></div>`;
           return;
         }
-        list.innerHTML = snap.docs.map(renderOrderCard).join("");
+        const docs = snap.docs.slice().sort((a, b) => {
+          const ta = a.data().createdAt?.toMillis ? a.data().createdAt.toMillis() : 0;
+          const tb = b.data().createdAt?.toMillis ? b.data().createdAt.toMillis() : 0;
+          return tb - ta;
+        });
+        list.innerHTML = docs.map(renderOrderCard).join("");
       } catch (err) {
         document.getElementById("orders-list").innerHTML = `<div class="empty-state bn">অর্ডার লোড করতে সমস্যা হয়েছে।</div>`;
       }
