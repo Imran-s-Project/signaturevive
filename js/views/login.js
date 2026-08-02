@@ -14,6 +14,11 @@ const LoginView = {
 
       <div class="form-msg" id="login-msg"></div>
 
+      <button type="button" class="btn btn-outline btn-block btn-lg btn-google bn" id="google-login-btn">
+        <i class="fa-brands fa-google"></i> গুগল দিয়ে লগইন করো
+      </button>
+      <div class="auth-divider bn">অথবা</div>
+
       <form id="login-form">
         <div class="field">
           <label class="bn">ইমেইল</label>
@@ -30,6 +35,26 @@ const LoginView = {
       <p class="auth-alt bn">অ্যাকাউন্ট নেই? <a href="${signupHref}">সাইন আপ করো</a></p>
     </div>
   </div>`;
+
+    document.getElementById("google-login-btn").addEventListener("click", async () => {
+      const msg = document.getElementById("login-msg");
+      const gbtn = document.getElementById("google-login-btn");
+      msg.className = "form-msg";
+      gbtn.disabled = true;
+      const originalLabel = gbtn.innerHTML;
+      gbtn.innerHTML = `<span class="loader-spin"></span>`;
+      try {
+        await signInWithGoogle();
+        msg.textContent = "লগইন সফল হয়েছে! নিয়ে যাওয়া হচ্ছে...";
+        msg.classList.add("success", "show");
+        setTimeout(() => { location.hash = redirect || "#/account"; }, 800);
+      } catch (err) {
+        msg.textContent = translateAuthError(err.code);
+        msg.classList.add("error", "show");
+        gbtn.disabled = false;
+        gbtn.innerHTML = originalLabel;
+      }
+    });
 
     document.getElementById("login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
