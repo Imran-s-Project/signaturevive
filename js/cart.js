@@ -42,6 +42,43 @@ const Cart = {
   }
 };
 
+/* =========================================================
+   Wishlist (localStorage based, Cart-এর মতোই)
+   ========================================================= */
+const WISHLIST_KEY = "viveshop_wishlist_v1";
+
+const Wishlist = {
+  get() {
+    try { return JSON.parse(localStorage.getItem(WISHLIST_KEY)) || []; }
+    catch { return []; }
+  },
+  has(productId) { return this.get().includes(productId); },
+  toggle(productId) {
+    let items = this.get();
+    let nowActive;
+    if (items.includes(productId)) {
+      items = items.filter(id => id !== productId);
+      nowActive = false;
+    } else {
+      items.push(productId);
+      nowActive = true;
+    }
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(items));
+    return nowActive;
+  }
+};
+
+/* প্রোডাক্ট কার্ডের হার্ট বাটনে ক্লিক করলে কল হয় */
+function toggleWishlistBtn(productId, btnEl) {
+  const nowActive = Wishlist.toggle(productId);
+  document.querySelectorAll(`.wishlist-btn[data-pid="${productId}"]`).forEach(btn => {
+    btn.classList.toggle("active", nowActive);
+  });
+  showToast(nowActive
+    ? `উইশলিস্টে যোগ হয়েছে <i class="fa-solid fa-heart"></i>`
+    : "উইশলিস্ট থেকে সরানো হয়েছে");
+}
+
 function updateCartBadge() {
   document.querySelectorAll(".js-cart-count").forEach(el => {
     const n = Cart.count();
@@ -60,7 +97,7 @@ function showToast(message) {
     toast.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg><span class="js-toast-text"></span>`;
     document.body.appendChild(toast);
   }
-  toast.querySelector(".js-toast-text").textContent = message;
+  toast.querySelector(".js-toast-text").innerHTML = message;
   toast.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
