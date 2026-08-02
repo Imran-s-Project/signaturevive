@@ -197,10 +197,10 @@ const PRODUCTS = [
 ];
 
 const CATEGORIES = [
-  { name: "Fashion", emoji: "👕" },
-  { name: "Electronics", emoji: "🎧" },
-  { name: "Home & Living", emoji: "🏠" },
-  { name: "Beauty", emoji: "💄" }
+  { name: "Fashion", icon: "fa-shirt" },
+  { name: "Electronics", icon: "fa-headphones" },
+  { name: "Home & Living", icon: "fa-house" },
+  { name: "Beauty", icon: "fa-spray-can-sparkles" }
 ];
 
 function getProductById(id) {
