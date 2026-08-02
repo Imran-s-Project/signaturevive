@@ -222,6 +222,7 @@ ul{list-style:none;margin:0;padding:0}
 .pd-zoom-wrap{
   position:relative;border-radius:var(--radius-lg);overflow:hidden;background:#F0F0F5;
   aspect-ratio:1/1;cursor:zoom-in;border:1px solid var(--color-border);
+  touch-action:none;
 }
 .pd-zoom-wrap img{width:100%;height:100%;object-fit:cover;pointer-events:none}
 .pd-lens{
