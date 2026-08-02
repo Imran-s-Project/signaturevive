@@ -3,13 +3,15 @@
    👉 ফায়ারবেস কনসোল থেকে তোমার প্রজেক্টের config বসাও নিচে।
    Firebase Console → Project settings → General → Your apps → SDK setup
    ========================================================= */
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBygErKd9KNDSjLfolfOPNZjRzCMlAkSsk",
+  authDomain: "signatureviveshop.firebaseapp.com",
+  projectId: "signatureviveshop",
+  storageBucket: "signatureviveshop.firebasestorage.app",
+  messagingSenderId: "1081797384994",
+  appId: "1:1081797384994:web:7387641f19dfed1d93637b",
+  measurementId: "G-B6PP7VCMS4"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -30,6 +32,20 @@ const db = firebase.firestore();
          allow create: if request.auth != null;
          allow read: if request.auth != null &&
            (resource.data.uid == request.auth.uid);
+       }
+       match /reviews/{reviewId} {
+         allow read: if true;
+         allow create: if request.auth != null &&
+           request.auth.uid == request.resource.data.uid;
+         allow update: if request.auth != null &&
+           request.auth.uid == resource.data.uid &&
+           request.auth.uid == request.resource.data.uid;
+         allow delete: if request.auth != null &&
+           request.auth.uid == resource.data.uid;
+       }
+       match /newsletter_subscribers/{email} {
+         allow create, update: if true;
+         allow read, delete: if false;
        }
      }
    }
