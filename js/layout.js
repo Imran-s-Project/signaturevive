@@ -33,7 +33,7 @@ function renderFullHeader(activePage) {
   const mobileLinks = LAYOUT_MOBILE_LINKS.map(l => `<a href="${l.href}">${l.label}</a>`).join("");
 
   return `
-<div class="announce">🚚 সারাদেশে হোম ডেলিভারি &nbsp;•&nbsp; ৫০০+ টাকার অর্ডারে ফ্রি শিপিং &nbsp;•&nbsp; ক্যাশ অন ডেলিভারি সুবিধা</div>
+<div class="announce"><i class="fa-solid fa-truck"></i> সারাদেশে হোম ডেলিভারি &nbsp;•&nbsp; ৫০০+ টাকার অর্ডারে ফ্রি শিপিং &nbsp;•&nbsp; ক্যাশ অন ডেলিভারি সুবিধা</div>
 
 <header class="site-header">
   <div class="nav container">
@@ -105,7 +105,7 @@ function renderFullFooter() {
   </div>
   <div class="footer-bottom bn">
     <span>© 2026 ViveShop. সর্বস্বত্ব সংরক্ষিত।</span>
-    <span>তৈরি হয়েছে ❤️ দিয়ে, বাংলাদেশ থেকে</span>
+    <span>তৈরি হয়েছে <i class="fa-solid fa-heart"></i> দিয়ে, বাংলাদেশ থেকে</span>
   </div>
 </footer>`;
 }
@@ -160,6 +160,26 @@ function wireCartOpenButtons() {
   });
 }
 
+/* হেডারের সার্চ বক্স — আগে শুধু শপ পেজে কাজ করতো, এখন যেকোনো
+   পেজ থেকে Enter চাপলে সরাসরি শপ পেজে ফলাফল নিয়ে যায়। */
+function wireHeaderSearch() {
+  const input = document.getElementById("search-input");
+  if (!input) return;
+  input.addEventListener("keydown", e => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    const val = input.value.trim();
+    if (!val) return;
+    const target = "#/shop?search=" + encodeURIComponent(val);
+    if (location.hash === target) {
+      // ইতিমধ্যে শপ পেজে একই সার্চ থাকলেও রাউটার আবার রান করাতে হবে
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+    } else {
+      location.hash = target;
+    }
+  });
+}
+
 function closeMobileNav() {
   document.querySelector(".js-mobile-nav")?.classList.remove("open");
 }
@@ -193,6 +213,7 @@ function applyLayout(cfg) {
   closeMobileNav();
   wireMobileNav();
   wireCartOpenButtons();
+  wireHeaderSearch();
   refreshAuthSlot();
   if (typeof updateCartBadge === "function") updateCartBadge();
 }
