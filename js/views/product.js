@@ -79,7 +79,7 @@ const ProductView = {
         <div class="pd-zoom-wrap" id="pd-zoom-wrap">
           <img id="pd-main-img" src="${p.images[0]}" alt="${p.name}">
           <div class="pd-lens" id="pd-lens"></div>
-          <span class="pd-zoom-hint bn"><i class="fa-solid fa-magnifying-glass"></i> হোভার করে জুম দেখো</span>
+          <span class="pd-zoom-hint bn"><i class="fa-solid fa-magnifying-glass"></i> হোভার করো বা আঙুল চেপে টানো — জুম দেখো</span>
         </div>
         <div class="pd-thumbs" id="pd-thumbs">
           ${p.images.map((img, i) => `<div class="pd-thumb ${i === 0 ? "active" : ""}" data-index="${i}"><img src="${img}" alt="thumb ${i + 1}"></div>`).join("")}
@@ -160,15 +160,12 @@ const ProductView = {
       const img = document.getElementById("pd-main-img");
       const lens = document.getElementById("pd-lens");
       const zoomFactor = 2.4;
-      const isTouch = window.matchMedia("(hover: none)").matches;
-      if (isTouch) { lens.style.display = "none"; return; }
-
       const lensSize = 160;
 
-      function moveLens(e) {
+      function moveLens(clientX, clientY) {
         const rect = wrap.getBoundingClientRect();
-        let x = e.clientX - rect.left;
-        let y = e.clientY - rect.top;
+        let x = clientX - rect.left;
+        let y = clientY - rect.top;
 
         x = Math.max(lensSize / 2, Math.min(x, rect.width - lensSize / 2));
         y = Math.max(lensSize / 2, Math.min(y, rect.height - lensSize / 2));
@@ -184,9 +181,28 @@ const ProductView = {
         lens.style.backgroundPosition = `${bgX}px ${bgY}px`;
       }
 
+      // ডেস্কটপ — মাউস হোভার করলে
       wrap.addEventListener("mouseenter", () => { lens.style.display = "block"; });
-      wrap.addEventListener("mousemove", moveLens);
+      wrap.addEventListener("mousemove", e => moveLens(e.clientX, e.clientY));
       wrap.addEventListener("mouseleave", () => { lens.style.display = "none"; });
+
+      // মোবাইল/টাচ — ছবির উপর আঙুল চেপে ধরে টানলে জুম লেন্স দেখা যাবে
+      wrap.addEventListener("touchstart", e => {
+        const t = e.touches[0];
+        if (!t) return;
+        lens.style.display = "block";
+        moveLens(t.clientX, t.clientY);
+      }, { passive: true });
+
+      wrap.addEventListener("touchmove", e => {
+        const t = e.touches[0];
+        if (!t) return;
+        e.preventDefault(); // আঙুল টানার সময় পেজ স্ক্রল বন্ধ রাখা
+        moveLens(t.clientX, t.clientY);
+      }, { passive: false });
+
+      wrap.addEventListener("touchend", () => { lens.style.display = "none"; });
+      wrap.addEventListener("touchcancel", () => { lens.style.display = "none"; });
     }
 
     function setupThumbs(product) {
