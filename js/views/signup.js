@@ -14,6 +14,11 @@ const SignupView = {
 
       <div class="form-msg" id="signup-msg"></div>
 
+      <button type="button" class="btn btn-outline btn-block btn-lg btn-google bn" id="google-signup-btn">
+        <i class="fa-brands fa-google"></i> গুগল দিয়ে সাইন আপ করো
+      </button>
+      <div class="auth-divider bn">অথবা</div>
+
       <form id="signup-form">
         <div class="field">
           <label class="bn">পূর্ণ নাম</label>
@@ -54,6 +59,26 @@ const SignupView = {
       const colors = ["#D93025", "#E8A33D", "#E8A33D", "#1F9D55"];
       pwBar.style.width = pct + "%";
       pwBar.style.background = colors[Math.max(0, strength - 1)] || "#D93025";
+    });
+
+    document.getElementById("google-signup-btn").addEventListener("click", async () => {
+      const msg = document.getElementById("signup-msg");
+      const gbtn = document.getElementById("google-signup-btn");
+      msg.className = "form-msg";
+      gbtn.disabled = true;
+      const originalLabel = gbtn.innerHTML;
+      gbtn.innerHTML = `<span class="loader-spin"></span>`;
+      try {
+        await signInWithGoogle();
+        msg.textContent = "অ্যাকাউন্ট তৈরি হয়েছে! নিয়ে যাওয়া হচ্ছে...";
+        msg.classList.add("success", "show");
+        setTimeout(() => { location.hash = redirect || "#/account"; }, 800);
+      } catch (err) {
+        msg.textContent = translateAuthError(err.code);
+        msg.classList.add("error", "show");
+        gbtn.disabled = false;
+        gbtn.innerHTML = originalLabel;
+      }
     });
 
     document.getElementById("signup-form").addEventListener("submit", async (e) => {
