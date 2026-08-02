@@ -22,3 +22,5 @@
 .form-msg.success{background:#E9F8EF;color:#177A3F}
 .pw-strength{height:4px;border-radius:2px;background:var(--color-border);margin-top:8px;overflow:hidden}
 .pw-strength-bar{height:100%;width:0%;background:#D93025;transition:width .2s,background .2s}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--color-text)}
+.btn-google i{color:#DB4437;font-size:16px}
