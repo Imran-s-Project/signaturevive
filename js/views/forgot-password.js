@@ -6,7 +6,7 @@ const ForgotPasswordView = {
     container.innerHTML = `
   <div class="auth-wrap">
     <div class="auth-card">
-      <h1 class="bn">পাসওয়ার্ড রিসেট করো 🔑</h1>
+      <h1 class="bn">পাসওয়ার্ড রিসেট করো <i class="fa-solid fa-key"></i></h1>
       <p class="sub bn">তোমার ইমেইল দাও — আমরা রিসেট লিংক পাঠিয়ে দেব</p>
 
       <div class="form-msg" id="reset-msg"></div>
