@@ -8,7 +8,7 @@ const ShopView = {
     let state = {
       categories: query.get("cat") ? [query.get("cat")] : [],
       maxPrice: 3000,
-      search: "",
+      search: query.get("search") || "",
       sort: "default"
     };
 
@@ -82,6 +82,9 @@ const ShopView = {
 
     renderCatFilters();
     applyFilters();
+
+    const headerSearchInput = document.getElementById("search-input");
+    if (headerSearchInput && state.search) headerSearchInput.value = state.search;
 
     document.getElementById("price-range").addEventListener("input", e => {
       state.maxPrice = Number(e.target.value);
