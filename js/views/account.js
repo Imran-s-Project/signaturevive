@@ -41,7 +41,8 @@ const AccountView = {
     </div>
   </div>`;
 
-    auth.onAuthStateChanged(async (user) => {
+    const unsub = auth.onAuthStateChanged(async (user) => {
+      unsub();
       if (!user) { location.hash = "#/login"; return; }
 
       document.getElementById("account-loading").style.display = "none";
