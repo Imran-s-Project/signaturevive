@@ -1,0 +1,22 @@
+/* ---------- Account / Profile ---------- */
+.avatar-upload{position:relative;width:84px;height:84px;flex-shrink:0}
+.avatar-upload img,.avatar-upload .avatar-fallback{
+  width:84px;height:84px;border-radius:50%;object-fit:cover;display:block;
+}
+.avatar-upload .avatar-fallback{
+  background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:700;font-family:var(--font-display);
+}
+.avatar-upload .avatar-edit-btn{
+  position:absolute;bottom:-2px;right:-2px;width:30px;height:30px;border-radius:50%;
+  background:var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center;
+  border:2.5px solid var(--color-surface);cursor:pointer;font-size:12px;box-shadow:var(--shadow-sm);
+}
+.avatar-upload .avatar-edit-btn:hover{background:var(--color-accent-dark)}
+.avatar-upload input[type=file]{display:none}
+.header-avatar{width:30px;height:30px;border-radius:50%;object-fit:cover;display:block}
+.profile-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:520px){.profile-edit-grid{grid-template-columns:1fr}}
+.account-tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--color-border)}
+.account-tab{padding:10px 4px;font-size:14px;font-weight:600;color:var(--color-muted);border-bottom:2px solid transparent;cursor:pointer}
+.account-tab.active{color:var(--color-primary);border-color:var(--color-accent)}
