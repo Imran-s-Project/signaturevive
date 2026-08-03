@@ -39,6 +39,7 @@ button{font-family:inherit;cursor:pointer;}
   background:radial-gradient(circle at 20% 20%, #383C7D 0%, #20234A 55%, #14162F 100%);
   padding:20px;
 }
+.login-screen[hidden]{display:none;}
 .login-card{
   width:100%;max-width:380px;
   background:var(--color-surface);
@@ -84,6 +85,7 @@ button{font-family:inherit;cursor:pointer;}
 
 /* ================= SHELL ================= */
 .admin-shell{display:flex;min-height:100vh;}
+.admin-shell[hidden]{display:none;}
 .sidebar{
   width:230px;flex-shrink:0;
   background:linear-gradient(180deg,#20234A 0%,#171933 100%);
