@@ -22,41 +22,41 @@ const ROUTES = {
     view: () => HomeView
   },
   "shop": {
-    page: "shop", header: "full", footer: "simple", cart: true,
+    page: "shop", header: "full", footer: "full", cart: true,
     title: "শপ — সব প্রোডাক্ট | ViveShop",
     view: () => ShopView
   },
   "product": {
-    page: "product", header: "full", footer: "simple", cart: true,
+    page: "product", header: "full", footer: "full", cart: true,
     title: "প্রোডাক্ট | ViveShop",
     view: () => ProductView
   },
   "login": {
-    page: "login", header: "simple", footer: "none", cart: false,
+    page: "login", header: "simple", footer: "full", cart: false,
     ctaText: "শপ দেখো", ctaHref: "#/shop",
     title: "লগইন | ViveShop",
     view: () => LoginView
   },
   "signup": {
-    page: "signup", header: "simple", footer: "none", cart: false,
+    page: "signup", header: "simple", footer: "full", cart: false,
     ctaText: "শপ দেখো", ctaHref: "#/shop",
     title: "সাইন আপ | ViveShop",
     view: () => SignupView
   },
   "forgot-password": {
-    page: "forgot", header: "simple", footer: "none", cart: false,
+    page: "forgot", header: "simple", footer: "full", cart: false,
     ctaText: "শপ দেখো", ctaHref: "#/shop",
     title: "পাসওয়ার্ড রিসেট | ViveShop",
     view: () => ForgotPasswordView
   },
   "checkout": {
-    page: "checkout", header: "simple", footer: "none", cart: true,
+    page: "checkout", header: "simple", footer: "full", cart: true,
     ctaText: "কেনাকাটা চালিয়ে যাও", ctaHref: "#/shop",
     title: "চেকআউট | ViveShop",
     view: () => CheckoutView
   },
   "account": {
-    page: "account", header: "simple", footer: "none", cart: false,
+    page: "account", header: "simple", footer: "full", cart: false,
     ctaText: "শপ দেখো", ctaHref: "#/shop",
     title: "আমার অ্যাকাউন্ট | ViveShop",
     view: () => AccountView
