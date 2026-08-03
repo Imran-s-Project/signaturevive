@@ -60,8 +60,8 @@ function renderCheckout(container, user) {
               <div><div class="pay-name bn">বিকাশ (Send Money)</div><div class="pay-desc bn">ম্যানুয়াল সেন্ড মানি</div></div>
             </label>
             <div class="pay-detail bn" id="detail-bkash">
-              এই নম্বরে <strong>Send Money</strong> করো: <strong>01XXXXXXXXX</strong> (Personal)<br>
-              পেমেন্ট করার পর নিচে ট্রানজেকশন আইডি দাও।
+              এই নম্বরে <strong>Send Money</strong> করো: <strong>01334108089</strong> (Personal)<br>
+              সেন্ড মানি করার পর নিচে ট্রানজেকশন আইডি দাও।
             </div>
 
             <label class="pay-option">
@@ -69,8 +69,8 @@ function renderCheckout(container, user) {
               <div><div class="pay-name bn">নগদ (Send Money)</div><div class="pay-desc bn">ম্যানুয়াল সেন্ড মানি</div></div>
             </label>
             <div class="pay-detail bn" id="detail-nagad">
-              এই নম্বরে <strong>Send Money</strong> করো: <strong>01XXXXXXXXX</strong> (Personal)<br>
-              পেমেন্ট করার পর নিচে ট্রানজেকশন আইডি দাও।
+              এই নম্বরে <strong>Send Money</strong> করো: <strong>01334108089</strong> (Personal)<br>
+              সেন্ড মানি করার পর নিচে ট্রানজেকশন আইডি দাও।
             </div>
 
             <label class="pay-option">
@@ -78,8 +78,8 @@ function renderCheckout(container, user) {
               <div><div class="pay-name bn">রকেট (Send Money)</div><div class="pay-desc bn">ম্যানুয়াল সেন্ড মানি</div></div>
             </label>
             <div class="pay-detail bn" id="detail-rocket">
-              এই নম্বরে <strong>Send Money</strong> করো: <strong>01XXXXXXXXX-1</strong> (Personal)<br>
-              পেমেন্ট করার পর নিচে ট্রানজেকশন আইডি দাও।
+              এই নম্বরে <strong>Send Money</strong> করো: <strong>01957329211-1</strong> (Personal)<br>
+              সেন্ড মানি করার পর নিচে ট্রানজেকশন আইডি দাও।
             </div>
           </div>
 
