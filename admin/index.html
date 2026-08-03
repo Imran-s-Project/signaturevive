@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>অ্যাডমিন প্যানেল | ViveShop</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="bn">
+
+<!-- ================= LOGIN GATE ================= -->
+<div id="login-screen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Vive<span>Shop</span> <span class="login-logo-tag">Admin</span></div>
+    <p class="login-sub">শুধু অনুমোদিত অ্যাডমিন এখানে ঢুকতে পারবে।</p>
+    <form id="login-form">
+      <label class="field">
+        <span>ইমেইল</span>
+        <input type="email" id="login-email" required autocomplete="username">
+      </label>
+      <label class="field">
+        <span>পাসওয়ার্ড</span>
+        <input type="password" id="login-password" required autocomplete="current-password">
+      </label>
+      <p id="login-error" class="login-error" hidden></p>
+      <button type="submit" class="btn-primary btn-block" id="login-submit">
+        <span>লগইন করো</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ================= ADMIN SHELL ================= -->
+<div id="admin-shell" class="admin-shell" hidden>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">Vive<span>Shop</span></div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="dashboard">
+        <i class="fa-solid fa-chart-line"></i> ড্যাশবোর্ড
+      </button>
+      <button class="nav-item" data-view="subscribers">
+        <i class="fa-solid fa-users"></i> সাবস্ক্রাইবার
+      </button>
+      <button class="nav-item" data-view="campaign">
+        <i class="fa-solid fa-paper-plane"></i> ইমেইল পাঠাও
+      </button>
+    </nav>
+    <button class="sidebar-logout" id="logout-btn">
+      <i class="fa-solid fa-right-from-bracket"></i> সাইন আউট
+    </button>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-title" id="topbar-title">ড্যাশবোর্ড</div>
+      <div class="topbar-user">
+        <span id="topbar-email"></span>
+        <div class="topbar-avatar" id="topbar-avatar">A</div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- ---------- DASHBOARD VIEW ---------- -->
+      <section id="view-dashboard" class="view">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#EEF0FB;color:#383C7D;"><i class="fa-solid fa-users"></i></div>
+            <div>
+              <div class="stat-value" id="stat-total">–</div>
+              <div class="stat-label">মোট সাবস্ক্রাইবার</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#FFF1EC;color:#E5502F;"><i class="fa-solid fa-calendar-week"></i></div>
+            <div>
+              <div class="stat-value" id="stat-week">–</div>
+              <div class="stat-label">এই সপ্তাহে নতুন</div>
+            </div>
+          </div>
+          <div class="stat-icon-card stat-card">
+            <div class="stat-icon" style="background:#EAFBF1;color:#1F9D55;"><i class="fa-solid fa-calendar-days"></i></div>
+            <div>
+              <div class="stat-value" id="stat-month">–</div>
+              <div class="stat-label">এই মাসে নতুন</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>সাম্প্রতিক সাবস্ক্রাইবার</h3>
+            <button class="link-btn" data-goto="subscribers">সবাই দেখো <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+          <div id="recent-list" class="recent-list">
+            <div class="empty-hint">লোড হচ্ছে…</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- SUBSCRIBERS VIEW ---------- -->
+      <section id="view-subscribers" class="view" hidden>
+        <div class="panel">
+          <div class="panel-head panel-head-wrap">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="subscriber-search" placeholder="ইমেইল দিয়ে খুঁজো…">
+            </div>
+            <div class="panel-actions">
+              <span id="selected-count" class="selected-count" hidden></span>
+              <button class="btn-ghost" id="export-csv-btn"><i class="fa-solid fa-file-arrow-down"></i> CSV এক্সপোর্ট</button>
+              <button class="btn-ghost btn-danger" id="delete-selected-btn" disabled><i class="fa-solid fa-trash"></i> মুছে ফেলো</button>
+              <button class="btn-primary" id="email-selected-btn" disabled><i class="fa-solid fa-paper-plane"></i> সিলেক্টেডদের মেইল করো</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table" id="subscriber-table">
+              <thead>
+                <tr>
+                  <th class="col-check"><input type="checkbox" id="select-all-checkbox"></th>
+                  <th>ইমেইল</th>
+                  <th>সাবস্ক্রাইব করেছে</th>
+                  <th class="col-action"></th>
+                </tr>
+              </thead>
+              <tbody id="subscriber-tbody">
+                <tr><td colspan="4" class="empty-hint">লোড হচ্ছে…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- CAMPAIGN / SEND EMAIL VIEW ---------- -->
+      <section id="view-campaign" class="view" hidden>
+        <div class="campaign-grid">
+
+          <div class="panel">
+            <div class="panel-head"><h3>প্রোডাক্ট/অফার ইমেইল কম্পোজ করো</h3></div>
+
+            <div class="form-body">
+              <label class="field">
+                <span>প্রোডাক্ট বেছে নাও (ঐচ্ছিক — অটোফিল করবে)</span>
+                <select id="campaign-product-select">
+                  <option value="">— নিজে হাতে লিখবো —</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>প্রোডাক্টের নাম</span>
+                <input type="text" id="campaign-name" placeholder="যেমন: Classic Canvas Tote Bag">
+              </label>
+
+              <label class="field">
+                <span>দাম</span>
+                <input type="text" id="campaign-price" placeholder="যেমন: ৳ ৯৯০">
+              </label>
+
+              <label class="field">
+                <span>ছবির URL</span>
+                <input type="text" id="campaign-image" placeholder="https://.../image.jpg">
+              </label>
+
+              <label class="field">
+                <span>প্রোডাক্ট লিংক</span>
+                <input type="text" id="campaign-url" placeholder="https://yoursite.com/#/product?id=...">
+              </label>
+
+              <div class="field">
+                <span>রিসিপিয়েন্ট</span>
+                <div class="recipient-toggle">
+                  <button type="button" class="chip active" data-recipient="all">সব সাবস্ক্রাইবার (<span id="recipient-all-count">0</span>)</button>
+                  <button type="button" class="chip" data-recipient="selected">সাবস্ক্রাইবার পেজ থেকে বাছাই করা (<span id="recipient-selected-count">0</span>)</button>
+                </div>
+              </div>
+
+              <button class="btn-primary btn-block" id="send-campaign-btn">
+                <i class="fa-solid fa-paper-plane"></i> এখনই পাঠাও
+              </button>
+              <p class="form-hint">এক ক্লিকে সবাইকে Bcc দিয়ে একসাথে পাঠানো হবে — EmailJS কোটা থেকে মাত্র ১টা রিকোয়েস্ট কাটবে।</p>
+            </div>
+          </div>
+
+          <div class="panel preview-panel">
+            <div class="panel-head"><h3>প্রিভিউ</h3></div>
+            <div class="preview-frame-wrap">
+              <div class="preview-badge">✨ সীমিত সময়ের অফার</div>
+              <img id="preview-image" class="preview-image" src="" alt="">
+              <div class="preview-body">
+                <h4 id="preview-name">প্রোডাক্টের নাম এখানে দেখাবে</h4>
+                <div id="preview-price" class="preview-price">৳ 0</div>
+                <div class="preview-btn">প্রোডাক্টটি দেখো →</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast-host" class="toast-host"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script src="../js/firebase-config.js"></script>
+<script src="../js/products-data.js"></script>
+<script src="../js/email.js"></script>
+<script src="admin.js"></script>
+
+</body>
+</html>
