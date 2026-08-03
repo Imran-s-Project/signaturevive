@@ -45,8 +45,9 @@ const googleProvider = new firebase.auth.GoogleAuthProvider();
            request.auth.uid == resource.data.uid;
        }
        match /newsletter_subscribers/{email} {
-         allow create, update: if true;
-         allow read, delete: if false;
+         allow create: if true;
+         allow get: if true;
+         allow update, list, delete: if false;
        }
      }
    }
