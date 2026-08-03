@@ -117,7 +117,7 @@ const HomeView = {
         const existing = await subscriberRef.get();
 
         if (existing.exists) {
-          showToast("এই ইমেইল দিয়ে তুমি আগে থেকেই সাবস্ক্রাইব করা আছো");
+          showToast("You are already subscribed with this email.");
           form.reset();
           return;
         }
@@ -129,10 +129,10 @@ const HomeView = {
 
         sendSubscribeConfirmationEmail(email);
 
-        showToast(`সাবস্ক্রাইব করার জন্য ধন্যবাদ! <i class="fa-solid fa-champagne-glasses"></i>`);
+        showToast(`Thank you for subscribing! <i class="fa-solid fa-champagne-glasses"></i>`);
         form.reset();
       } catch (err) {
-        showToast("দুঃখিত, সাবস্ক্রাইব করতে সমস্যা হয়েছে। আবার চেষ্টা করো।");
+        showToast("Sorry, try again later.");
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = originalLabel;
