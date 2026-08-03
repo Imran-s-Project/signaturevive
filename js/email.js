@@ -20,9 +20,9 @@
    ডেলিভারেবিলিটি — সব বিল্ট-ইন থাকে।
    ========================================================= */
 
-const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
-const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
-const EMAILJS_TEMPLATE_CONFIRM = "YOUR_CONFIRM_TEMPLATE_ID";
+const EMAILJS_PUBLIC_KEY = "i8ar8D3TL931MP9Wq";
+const EMAILJS_SERVICE_ID = "service_k78x1uh";
+const EMAILJS_TEMPLATE_CONFIRM = "template_wbl0xaf";
 const EMAILJS_TEMPLATE_PRODUCT = "YOUR_PRODUCT_TEMPLATE_ID";
 
 if (typeof emailjs !== "undefined") {
