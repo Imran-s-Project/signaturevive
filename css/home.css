@@ -41,6 +41,8 @@
 .newsletter{background:var(--color-primary);color:#fff;border-radius:var(--radius-lg);padding:48px 40px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;margin:0 auto;max-width:var(--container)}
 .newsletter h3{font-size:22px;margin-bottom:6px}
 .newsletter p{color:rgba(255,255,255,.7);margin:0}
-.newsletter-form{display:flex;gap:10px}
-.newsletter-form input{padding:12px 16px;border-radius:999px;border:none;min-width:220px;font-family:inherit}
-@media(max-width:700px){.newsletter{flex-direction:column;text-align:center}.newsletter-form{width:100%}.newsletter-form input{flex:1}}
+.newsletter-form{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.newsletter-form input{padding:0 20px;height:48px;border-radius:999px;border:2px solid transparent;min-width:220px;flex:1;font-family:inherit;font-size:15px;line-height:48px;outline:none}
+.newsletter-form input:focus{border-color:rgba(255,255,255,.5)}
+.newsletter-form .btn{height:48px;flex-shrink:0}
+@media(max-width:700px){.newsletter{flex-direction:column;text-align:center}.newsletter-form{width:100%}.newsletter-form input{flex:1 1 100%}.newsletter-form .btn{flex:1 1 100%}}
