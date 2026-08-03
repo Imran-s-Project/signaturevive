@@ -120,12 +120,23 @@ function renderSimpleFooter() {
 </footer>`;
 }
 
+function userInitials(user) {
+  const source = user?.displayName || user?.email || "";
+  const parts = source.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 function layoutAuthSlotHtml(user) {
   if (user) {
     const displayName = user.displayName || user.email.split("@")[0];
+    const avatar = user.photoURL
+      ? `<img src="${user.photoURL}" class="header-avatar" alt="${displayName}">`
+      : `<span class="header-avatar avatar-fallback" style="font-size:12px">${userInitials(user)}</span>`;
     return `
       <a href="#/account" class="icon-btn" title="${displayName}">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+        ${avatar}
       </a>`;
   }
   return `
