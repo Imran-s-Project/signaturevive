@@ -107,16 +107,28 @@ const HomeView = {
       e.preventDefault();
       const form = e.target;
       const emailInput = form.querySelector('input[type="email"]');
-      const email = emailInput.value.trim();
+      const email = emailInput.value.trim().toLowerCase();
       const submitBtn = form.querySelector('button[type="submit"]');
       const originalLabel = submitBtn.textContent;
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<span class="loader-spin"></span>`;
       try {
-        await db.collection("newsletter_subscribers").doc(email).set({
+        const subscriberRef = db.collection("newsletter_subscribers").doc(email);
+        const existing = await subscriberRef.get();
+
+        if (existing.exists) {
+          showToast("এই ইমেইল দিয়ে তুমি আগে থেকেই সাবস্ক্রাইব করা আছো");
+          form.reset();
+          return;
+        }
+
+        await subscriberRef.set({
           email,
           subscribedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
+        });
+
+        sendSubscribeConfirmationEmail(email);
+
         showToast(`সাবস্ক্রাইব করার জন্য ধন্যবাদ! <i class="fa-solid fa-champagne-glasses"></i>`);
         form.reset();
       } catch (err) {
